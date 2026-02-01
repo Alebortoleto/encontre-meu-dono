@@ -47,7 +47,7 @@
                         
                         <div class="grid grid-cols-2 gap-2 text-[10px]">
                             <select id="bairro" class="p-3 border rounded-lg bg-gray-50 font-bold" required>
-                                <option value="">Bairro...</option>
+                                <option value="">Bairro em Mongaguá...</option>
                                 <option value="Agenor de Campos">Agenor de Campos</option>
                                 <option value="Centro">Centro</option>
                                 <option value="Itaóca">Itaóca</option>
@@ -73,7 +73,7 @@
                             <label class="block text-[9px] font-black text-gray-500 uppercase mb-1">Anexar Foto:</label>
                             <input type="file" id="input_foto" accept="image/*" class="text-[10px] w-full">
                             <p id="msg-video" class="hidden text-[8px] text-red-500 mt-2 font-bold leading-tight italic">
-                                * Por questões de sigilo e espaço, anexe uma FOTO. Solicitaremos os VÍDEOS e detalhes via WhatsApp.
+                                * Por questões de sigilo e segurança, anexe apenas uma FOTO. Nossa equipe entrará em contato via WhatsApp para solicitar vídeos e detalhes complementares.
                             </p>
                         </div>
 
@@ -108,11 +108,13 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active', 'btn-denuncia-active'));
             const tab = document.getElementById(`tab-${guia}`);
             tab.classList.add('tab-active');
+            
+            const msgVideo = document.getElementById('msg-video');
             if(guia === 'denuncia') {
                 tab.classList.add('btn-denuncia-active');
-                document.getElementById('msg-video').classList.remove('hidden');
+                msgVideo.classList.remove('hidden');
             } else {
-                document.getElementById('msg-video').classList.add('hidden');
+                msgVideo.classList.add('hidden');
             }
 
             document.getElementById('current_tab').value = guia;
