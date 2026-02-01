@@ -10,12 +10,12 @@
         .found-stamp { transform: rotate(-15deg); border: 3px solid #16a34a; color: #16a34a; background: rgba(255,255,255,0.9); z-index: 40; }
         .preview-img { width: 100%; height: 100%; object-fit: cover; }
         .zoonoses-blur { backdrop-filter: blur(25px); background: rgba(0,0,0,0.95); border: 2px solid #ef4444; }
-        /* Destaque nos Menus */
         .tab-btn { transition: all 0.3s; border-bottom: 4px solid transparent; }
-        .tab-active { border-bottom: 4px solid #facc15; background: rgba(255,255,255,0.1); color: #facc15; font-size: 11px; }
+        .tab-active { border-bottom: 4px solid #facc15; background: rgba(255,255,255,0.1); color: #facc15; }
         .btn-denuncia-active { border-bottom: 4px solid #ef4444 !important; color: #ef4444 !important; background: rgba(239, 68, 68, 0.1); }
         .admin-only { display: none; }
         .admin-mode .admin-only { display: block !important; }
+        .admin-mode .card-admin-border { border: 2px solid #ef4444 !important; }
     </style>
 </head>
 <body class="bg-gray-100 font-sans flex flex-col min-h-screen text-gray-900">
@@ -23,7 +23,7 @@
     <header class="bg-blue-600 text-white shadow-2xl sticky top-0 z-50">
         <div class="p-4 text-center relative border-b border-blue-500">
             <h1 class="text-xl font-black uppercase italic leading-none tracking-tighter">Encontre meu dono</h1>
-            <p class="text-[10px] font-light tracking-widest mt-1 opacity-80 uppercase">"Por Guti"</p>
+            <p class="text-[10px] font-light tracking-widest mt-1 opacity-80 uppercase font-bold text-blue-200">"Por Guti"</p>
             <button onclick="acessoGestor()" class="absolute top-2 right-2 opacity-20 hover:opacity-100 text-[10px]">🔒</button>
         </div>
         
@@ -61,11 +61,11 @@
                             </select>
                         </div>
 
-                        <textarea id="descricao" placeholder="Descreva as características do animal ou detalhes da denúncia..." class="w-full p-3 border rounded-lg text-xs h-24 shadow-sm" required></textarea>
+                        <textarea id="descricao" placeholder="Descreva os detalhes aqui..." class="w-full p-3 border rounded-lg text-xs h-24 shadow-sm" required></textarea>
 
                         <div id="contato-box" class="bg-yellow-50 p-3 rounded-xl border border-yellow-200">
-                            <label class="block text-[9px] font-black text-yellow-700 uppercase mb-1">Seu WhatsApp para Contato:</label>
-                            <input type="tel" id="whatsapp_contato" placeholder="Ex: 13991753601" class="w-full p-2 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-yellow-400" required>
+                            <label class="block text-[9px] font-black text-yellow-700 uppercase mb-1">Seu WhatsApp (Sigiloso):</label>
+                            <input type="tel" id="whatsapp_contato" placeholder="Ex: 13991753601" class="w-full p-2 border rounded-lg text-xs outline-none" required>
                         </div>
 
                         <div class="bg-gray-50 p-3 rounded-xl border border-dashed border-gray-300">
@@ -73,7 +73,7 @@
                             <input type="file" id="input_foto" accept="image/*,video/*" class="text-[10px] w-full">
                         </div>
 
-                        <button type="button" onclick="obterLocalizacao()" id="btnLoc" class="w-full py-3 bg-gray-100 text-gray-700 rounded-lg text-[10px] font-black border hover:bg-gray-200 transition-all">📍 MARCAR LOCALIZAÇÃO GPS</button>
+                        <button type="button" onclick="obterLocalizacao()" id="btnLoc" class="w-full py-3 bg-gray-100 text-gray-700 rounded-lg text-[10px] font-black border hover:bg-gray-200">📍 MARCAR LOCALIZAÇÃO GPS</button>
                         <input type="hidden" id="coords" value="">
 
                         <button type="submit" id="btnSubmit" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs tracking-widest hover:scale-[1.02] transition-all">Publicar Agora</button>
@@ -83,19 +83,17 @@
 
             <section class="lg:col-span-8">
                 <div id="admin-warning" class="hidden admin-only bg-red-600 p-3 rounded-lg mb-4 text-[10px] font-black text-white uppercase text-center shadow-lg">
-                    🔒 MODO GESTOR ATIVO: Visualizando Denúncias Sigilosas
+                    🔒 GESTÃO MONGBeach: Visualizando Dados de Denunciantes e Opções de Controle
                 </div>
-                <div id="petFeed" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    </div>
+                <div id="petFeed" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
             </section>
         </div>
     </main>
 
     <footer class="bg-gray-900 text-white p-8 mt-10 text-center border-t-4 border-yellow-400">
         <p class="text-[10px] opacity-60 uppercase font-black mb-1 tracking-widest">MONGBeach Tecnologia</p>
-        <p class="text-sm">Desenvolvido por <span class="text-blue-400 font-black">MONGBeach</span></p>
+        <p class="text-sm">Desenvolvido por <span class="text-blue-400 font-black italic">MONGBeach</span></p>
         <p class="text-xl font-black text-yellow-400 mt-2">(13) 99175-3601</p>
-        <p class="text-[9px] mt-4 opacity-40 tracking-widest uppercase italic">Mongaguá - SP • 2026</p>
     </footer>
 
     <script>
@@ -109,22 +107,18 @@
             if(guia === 'denuncia') tab.classList.add('btn-denuncia-active');
 
             document.getElementById('current_tab').value = guia;
-            const formContainer = document.getElementById('form-container');
             const formTitle = document.getElementById('form-title');
             const btnSubmit = document.getElementById('btnSubmit');
 
             if(guia === 'encontrados') {
                 formTitle.innerText = "📸 Encontrei um Pet";
-                formContainer.style.borderColor = "#2563eb";
-                btnSubmit.className = "w-full bg-blue-600 text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs tracking-widest transition-all";
+                btnSubmit.className = "w-full bg-blue-600 text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs";
             } else if(guia === 'perdidos') {
                 formTitle.innerText = "🔍 Perdi meu Pet";
-                formContainer.style.borderColor = "#16a34a";
-                btnSubmit.className = "w-full bg-green-600 text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs tracking-widest transition-all";
+                btnSubmit.className = "w-full bg-green-600 text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs";
             } else {
                 formTitle.innerText = "🚨 Denúncia Sigilosa";
-                formContainer.style.borderColor = "#dc2626";
-                btnSubmit.className = "w-full bg-red-600 text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs tracking-widest transition-all";
+                btnSubmit.className = "w-full bg-red-600 text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs";
             }
             renderFeed();
         }
@@ -145,7 +139,6 @@
             });
         }
 
-        // CORREÇÃO DO ENVIO: Função de submit ajustada
         document.getElementById('mainForm').onsubmit = function(e) {
             e.preventDefault();
             const fileInput = document.getElementById('input_foto');
@@ -176,13 +169,8 @@
             renderFeed();
             document.getElementById('mainForm').reset();
             document.getElementById('btnLoc').innerText = "📍 MARCAR LOCALIZAÇÃO GPS";
-            document.getElementById('btnLoc').className = "w-full py-3 bg-gray-100 text-gray-700 rounded-lg text-[10px] font-black border hover:bg-gray-200 transition-all";
-            
-            if(novoItem.guia === 'denuncia') {
-                alert("DENÚNCIA ENVIADA! Somente o gestor terá acesso aos seus dados.");
-            } else {
-                alert("Publicado com sucesso!");
-            }
+            document.getElementById('btnLoc').className = "w-full py-3 bg-gray-100 text-gray-700 rounded-lg text-[10px] font-black border";
+            alert(novoItem.guia === 'denuncia' ? "DENÚNCIA SIGILOSA ENVIADA COM SUCESSO." : "Publicado!");
         }
 
         function renderFeed() {
@@ -199,39 +187,39 @@
                 const isZoonoses = item.categoria === 'zoonoses';
                 const isResolvido = item.status === 'encontrado';
                 
-                card.className = `bg-white rounded-2xl shadow-lg border-b-4 overflow-hidden relative flex flex-col ${item.guia === 'denuncia' ? 'border-red-600 bg-red-50' : (item.guia === 'perdidos' ? 'border-green-500' : 'border-blue-500')} ${isResolvido ? 'opacity-40' : ''}`;
+                card.className = `bg-white rounded-2xl shadow-lg border-b-4 overflow-hidden relative flex flex-col ${item.guia === 'denuncia' ? 'border-red-600 card-admin-border' : (item.guia === 'perdidos' ? 'border-green-500' : 'border-blue-500')} ${isResolvido ? 'opacity-40' : ''}`;
                 
                 card.innerHTML = `
                     <div class="h-32 bg-gray-200 relative overflow-hidden flex items-center justify-center">
-                        ${item.midia ? `<img src="${item.midia}" class="preview-img">` : '<span class="text-3xl font-black opacity-10">MONGBeach</span>'}
-                        
-                        ${isZoonoses && !isResolvido ? `
-                            <div class="absolute inset-0 z-30 zoonoses-blur flex flex-col items-center justify-center text-center p-3">
-                                <p class="text-red-500 font-black text-[9px] uppercase mb-1">⚠️ IMAGEM SENSÍVEL</p>
-                                <p class="text-white text-[7px] leading-tight mb-3">Conteúdo de atropelamento ou ferimento grave.</p>
-                                <button onclick="this.parentElement.remove()" class="bg-red-600 text-white text-[8px] font-black px-4 py-1.5 rounded-full uppercase shadow-xl border border-red-400">Exibir Imagem</button>
-                            </div>
-                        ` : ''}
-
+                        ${item.midia ? `<img src="${item.midia}" class="preview-img">` : '<span class="text-3xl font-black opacity-10 italic">MONGBeach</span>'}
+                        ${isZoonoses && !isResolvido ? `<div class="absolute inset-0 z-30 zoonoses-blur flex flex-col items-center justify-center text-center p-3"><p class="text-red-500 font-black text-[9px] uppercase mb-1">⚠️ IMAGEM SENSÍVEL</p><button onclick="this.parentElement.remove()" class="bg-red-600 text-white text-[8px] font-black px-4 py-1.5 rounded-full uppercase">Exibir</button></div>` : ''}
                         ${isResolvido ? '<div class="absolute inset-0 flex items-center justify-center z-40"><span class="found-stamp font-black px-2 py-1 uppercase text-[10px]">RESOLVIDO</span></div>' : ''}
                         ${isAdmin ? `<button onclick="deletarItem(${item.id})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 text-[10px] z-50 font-bold shadow-lg">X</button>` : ''}
                     </div>
 
                     <div class="p-3 flex-grow flex flex-col">
                         <div class="flex justify-between items-center mb-1">
-                            <span class="text-[7px] font-black px-2 py-0.5 rounded bg-white text-gray-700 border uppercase border-gray-200 shadow-sm">${item.bairro}</span>
+                            <span class="text-[7px] font-black px-2 py-0.5 rounded bg-white text-gray-700 border uppercase border-gray-200">${item.bairro}</span>
                             <span class="text-[7px] font-black ${item.guia === 'denuncia' ? 'text-red-600' : 'text-gray-400'} uppercase">${item.guia}</span>
                         </div>
-                        <p class="font-bold text-gray-800 text-[10px] mt-1 h-12 overflow-hidden leading-tight">${item.descricao}</p>
+                        <p class="font-bold text-gray-800 text-[9px] mt-1 h-12 overflow-hidden leading-tight">${item.descricao}</p>
                         
+                        ${item.guia === 'denuncia' && isAdmin ? `
+                            <div class="mt-3 p-2 bg-red-50 border border-red-200 rounded-lg animate-pulse">
+                                <p class="text-[8px] font-black text-red-600 uppercase mb-1">🔒 PAINEL DE VALIDAÇÃO (SIGILOSO)</p>
+                                <a href="https://wa.me/55${item.whatsapp}" target="_blank" class="text-green-600 font-black text-[10px] block underline mb-1 uppercase">📲 Contatar Denunciante</a>
+                                ${item.coords ? `<a href="https://www.google.com/maps?q=${item.coords}" target="_blank" class="text-blue-500 text-[8px] block font-bold underline italic">📍 Ver local da Denúncia</a>` : ''}
+                            </div>
+                        ` : ''}
+
                         ${item.guia !== 'denuncia' && !isResolvido ? `
-                            <button onclick="revelar(this)" class="w-full mt-3 py-2.5 rounded-xl bg-gray-900 text-white text-[9px] font-black uppercase shadow-lg">Ver Contato / Local</button>
-                            <div class="hidden-contact mt-3 text-center animate-fadeIn">
+                            <button onclick="revelar(this)" class="w-full mt-3 py-2.5 rounded-xl bg-gray-900 text-white text-[9px] font-black uppercase">Ver Contato / Local</button>
+                            <div class="hidden-contact mt-3 text-center">
                                 <a href="https://wa.me/55${item.whatsapp}" target="_blank" class="text-green-600 font-black text-[11px] block underline uppercase">WhatsApp</a>
-                                ${item.coords ? `<a href="https://www.google.com/maps?q=${item.coords}" target="_blank" class="text-blue-500 text-[8px] block mt-1 font-black underline italic">📍 VER LOCAL NO GOOGLE MAPS</a>` : ''}
+                                ${item.coords ? `<a href="https://www.google.com/maps?q=${item.coords}" target="_blank" class="text-blue-500 text-[8px] block mt-1 font-black underline italic uppercase">📍 Local no Google Maps</a>` : ''}
                                 <button onclick="marcarResolvido(${item.id})" class="text-[7px] text-gray-400 font-bold block w-full mt-3 underline uppercase">Marcar como Resolvido</button>
                             </div>
-                        ` : (item.guia === 'denuncia' ? '<p class="text-[7px] text-red-600 font-black text-center mt-3 border border-red-200 py-1 bg-red-50 rounded">🔒 REGISTRO SOB SIGILO</p>' : '')}
+                        ` : (item.guia === 'denuncia' && !isAdmin ? '<p class="text-[7px] text-red-600 font-black text-center mt-3 border border-red-100 py-1 bg-red-50 rounded">🔒 ENVIADO AO GESTOR</p>' : '')}
                     </div>
                 `;
                 feed.appendChild(card);
@@ -239,20 +227,17 @@
         }
 
         function revelar(btn) { btn.nextElementSibling.style.display = 'block'; btn.style.display = 'none'; }
-        
         function marcarResolvido(id) { 
             const p = pets.find(x => x.id === id); 
             if(p) { p.status = 'encontrado'; localStorage.setItem('pets_mongagua_v2', JSON.stringify(pets)); renderFeed(); }
         }
-
         function deletarItem(id) { 
-            if(confirm("Excluir permanentemente?")) { 
+            if(confirm("Excluir registro permanentemente?")) { 
                 pets = pets.filter(x => x.id !== id); 
                 localStorage.setItem('pets_mongagua_v2', JSON.stringify(pets)); 
                 renderFeed(); 
             } 
         }
-
         renderFeed();
     </script>
 </body>
