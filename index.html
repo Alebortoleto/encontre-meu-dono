@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encontre meu dono - Por Guti</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden-contact { display: none; }
+        .blur-img { filter: blur(8px); transition: filter 0.3s; }
+        .blur-img:hover { filter: blur(0); }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans flex flex-col min-h-screen">
+
+    <header class="bg-blue-600 text-white p-6 shadow-xl text-center">
+        <h1 class="text-2xl font-black uppercase italic leading-none">Encontre meu dono</h1>
+        <p class="text-sm font-light tracking-widest mt-1">"Por Guti"</p>
+    </header>
+
+    <main class="container mx-auto p-4 flex-grow">
+        
+        <section class="bg-white p-6 rounded-2xl shadow-lg mb-8 border-t-4 border-blue-500">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">Cadastrar Animal</h2>
+            <form id="petForm" class="grid grid-cols-1 gap-4">
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="bairro" class="p-3 border rounded-lg bg-gray-50 text-sm" required>
+                        <option value="">Bairro em Mongaguá...</option>
+                        <option value="Agenor de Campos">Agenor de Campos</option>
+                        <option value="Centro">Centro</option>
+                        <option value="Itaóca">Itaóca</option>
+                        <option value="Vera Cruz">Vera Cruz</option>
+                        <option value="Jussara">Jussara</option>
+                    </select>
+                    
+                    <select id="categoria" class="p-3 border rounded-lg bg-gray-50 text-sm font-bold" onchange="checkZoonoses(this)">
+                        <option value="perdido">Pet Perdido/Visto</option>
+                        <option value="zoonoses">🚨 ZOONOSES (Ferido/Atropelado)</option>
+                    </select>
+                </div>
+
+                <input type="text" id="caracteristicas" placeholder="Cor, porte, pelagem e temperamento..." class="w-full p-3 border rounded-lg" required>
+
+                <div class="flex gap-2">
+                    <button type="button" onclick="obterLocalizacao()" id="btnLoc" class="flex-1 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs font-bold border">
+                        📍 Marcar Local GPS
+                    </button>
+                    <input type="hidden" id="coords" value="">
+                </div>
+
+                <div class="bg-gray-50 p-3 rounded-lg border border-dashed border-gray-300">
+                    <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Foto do Animal:</label>
+                    <input type="file" id="foto" accept="image/*" class="text-xs">
+                </div>
+
+                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all uppercase tracking-wider">
+                    Publicar no Mapa de Mongaguá
+                </button>
+            </form>
+        </section>
+
+        <h2 class="text-lg font-black mb-4 text-gray-700 border-l-4 border-blue-500 pl-2 uppercase">Registros Recentes</h2>
+        <div id="petFeed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white p-6 mt-10 text-center border-t-4 border-yellow-400">
+        <p class="text-sm opacity-90">Desenvolvido por <strong>MONGBeach</strong></p>
+        <p class="text-lg font-bold text-yellow-400">(13) 99175-3601</p>
+        <p class="text-[10px] mt-2 opacity-50 uppercase tracking-widest">Mongaguá - SP</p>
+    </footer>
+
+    <script>
+        function checkZoonoses(select) {
+            if(select.value === 'zoonoses') {
+                alert("ATENÇÃO: Casos de Zoonoses devem ser reportados com precisão. Certifique-se de marcar a localização GPS.");
+            }
+        }
+
+        function obterLocalizacao() {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                document.getElementById('coords').value = `${pos.coords.latitude},${pos.coords.longitude}`;
+                document.getElementById('btnLoc').innerText = "✅ GPS OK";
+                document.getElementById('btnLoc').classList.add("bg-green-100", "text-green-700");
+            });
+        }
+
+        const petForm = document.getElementById('petForm');
+        petForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const petData = {
+                bairro: document.getElementById('bairro').value,
+                categoria: document.getElementById('categoria').value,
+                caracteristicas: document.getElementById('caracteristicas').value,
+                coords: document.getElementById('coords').value,
+                contato: "(13) 9XXXX-XXXX" 
+            };
+            adicionarCard(petData);
+            this.reset();
+        });
+
+        function adicionarCard(pet) {
+            const feed = document.getElementById('petFeed');
+            const card = document.createElement('div');
+            const isZoonoses = pet.categoria === 'zoonoses';
+            
+            card.className = `bg-white rounded-2xl overflow-hidden shadow-lg border-b-4 ${isZoonoses ? 'border-red-600' : 'border-blue-500'}`;
+            
+            card.innerHTML = `
+                <div class="relative h-44 bg-gray-200 flex flex-col items-center justify-center overflow-hidden">
+                    ${isZoonoses ? `
+                        <div class="absolute inset-0 z-10 bg-black/70 flex flex-col items-center justify-center p-4 text-center text-white backdrop-blur-sm" id="alert-${Date.now()}">
+                            <span class="text-3xl mb-1">⚠️</span>
+                            <p class="text-xs font-bold uppercase">Imagens Sensíveis</p>
+                            <p class="text-[10px] opacity-80 mb-2">Animal ferido em via pública</p>
+                            <button onclick="this.parentElement.remove()" class="bg-white text-red-600 px-3 py-1 rounded-full text-[10px] font-black uppercase">Ver Foto</button>
+                        </div>
+                    ` : ''}
+                    <span class="text-4xl">🐶</span>
+                    <p class="text-[10px] text-gray-400 mt-2 italic">Imagem de Referência</p>
+                </div>
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[10px] font-black px-2 py-0.5 rounded bg-gray-100 text-gray-600 uppercase">${pet.bairro}</span>
+                        ${isZoonoses ? '<span class="text-[10px] font-black text-red-600 uppercase animate-pulse">● Zoonoses</span>' : ''}
+                    </div>
+                    <h3 class="font-bold text-gray-800 leading-tight h-10 overflow-hidden">${pet.caracteristicas}</h3>
+                    
+                    <button onclick="revelar(this)" class="mt-4 w-full ${isZoonoses ? 'bg-red-600' : 'bg-blue-600'} text-white py-3 rounded-xl font-black text-xs uppercase tracking-tighter">
+                        ${isZoonoses ? 'Resgatar / Ajudar' : 'É meu cachorro!'}
+                    </button>
+                    
+                    <div class="hidden-contact mt-3 p-3 bg-gray-50 border rounded-lg text-center">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase">Falar com quem postou:</p>
+                        <p class="text-lg font-black text-gray-800 leading-none mt-1">${pet.contato}</p>
+                        ${pet.coords ? `<a href="https://www.google.com/maps?q=${pet.coords}" target="_blank" class="text-blue-500 text-[10px] font-bold underline mt-2 block italic">VER LOCALIZAÇÃO NO GPS</a>` : ''}
+                    </div>
+                </div>
+            `;
+            feed.prepend(card);
+        }
+
+        function revelar(btn) {
+            const div = btn.nextElementSibling;
+            if(confirm("Deseja visualizar as informações de contato para este caso?")) {
+                div.style.display = 'block';
+                btn.style.display = 'none';
+            }
+        }
+
+        // Card de Exemplo Zoonoses
+        adicionarCard({
+            bairro: "Vera Cruz",
+            categoria: "zoonoses",
+            caracteristicas: "Cachorro atropelado na Av. Governador Mario Covas, precisa de ajuda urgente.",
+            coords: "-24.1234,-46.6789",
+            contato: "(13) 99175-3601"
+        });
+    </script>
+</body>
+</html>
