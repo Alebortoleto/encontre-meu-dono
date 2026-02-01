@@ -7,157 +7,216 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .hidden-contact { display: none; }
-        .blur-img { filter: blur(8px); transition: filter 0.3s; }
-        .blur-img:hover { filter: blur(0); }
+        .found-stamp { transform: rotate(-15deg); border: 3px solid #16a34a; color: #16a34a; background: rgba(255,255,255,0.9); z-index: 40; }
+        .preview-img { width: 100%; height: 100%; object-fit: cover; }
+        .zoonoses-blur { backdrop-filter: blur(12px); background: rgba(0,0,0,0.85); }
+        .admin-btn { display: none; }
+        .admin-mode .admin-btn { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-in; }
     </style>
 </head>
-<body class="bg-gray-50 font-sans flex flex-col min-h-screen">
+<body class="bg-gray-100 font-sans flex flex-col min-h-screen">
 
-    <header class="bg-blue-600 text-white p-6 shadow-xl text-center">
-        <h1 class="text-2xl font-black uppercase italic leading-none">Encontre meu dono</h1>
+    <header class="bg-blue-600 text-white p-6 shadow-xl text-center relative">
+        <h1 class="text-2xl font-black uppercase italic leading-none tracking-tighter">Encontre meu dono</h1>
         <p class="text-sm font-light tracking-widest mt-1">"Por Guti"</p>
+        <button onclick="acessoGestor()" class="absolute top-2 right-2 opacity-10 hover:opacity-100 text-[10px]">🔒 GESTÃO</button>
     </header>
 
-    <main class="container mx-auto p-4 flex-grow">
-        
-        <section class="bg-white p-6 rounded-2xl shadow-lg mb-8 border-t-4 border-blue-500">
-            <h2 class="text-xl font-bold mb-4 text-gray-800">Cadastrar Animal</h2>
-            <form id="petForm" class="grid grid-cols-1 gap-4">
-                
-                <div class="grid grid-cols-2 gap-2">
-                    <select id="bairro" class="p-3 border rounded-lg bg-gray-50 text-sm" required>
-                        <option value="">Bairro em Mongaguá...</option>
-                        <option value="Agenor de Campos">Agenor de Campos</option>
-                        <option value="Centro">Centro</option>
-                        <option value="Itaóca">Itaóca</option>
-                        <option value="Vera Cruz">Vera Cruz</option>
-                        <option value="Jussara">Jussara</option>
-                    </select>
-                    
-                    <select id="categoria" class="p-3 border rounded-lg bg-gray-50 text-sm font-bold" onchange="checkZoonoses(this)">
-                        <option value="perdido">Pet Perdido/Visto</option>
-                        <option value="zoonoses">🚨 ZOONOSES (Ferido/Atropelado)</option>
-                    </select>
+    <main class="container mx-auto p-4 flex-grow max-w-6xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <section class="lg:col-span-4">
+                <div class="bg-white p-5 rounded-2xl shadow-lg border-t-4 border-blue-500 sticky top-4">
+                    <h2 class="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">📸 Cadastrar Pet</h2>
+                    <form id="petForm" class="space-y-3">
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <select id="bairro" class="p-2 border rounded bg-gray-50 focus:ring-2 focus:ring-blue-400 outline-none" required onchange="toggleOutroBairro(this)">
+                                <option value="">Bairro em Mongaguá...</option>
+                                <option value="Agenor de Campos">Agenor de Campos</option>
+                                <option value="Centro">Centro</option>
+                                <option value="Itaóca">Itaóca</option>
+                                <option value="Vera Cruz">Vera Cruz</option>
+                                <option value="Jussara">Jussara</option>
+                                <option value="Jardim Praia Grande">Jardim Praia Grande</option>
+                                <option value="Outros">Outros...</option>
+                            </select>
+                            <select id="categoria" class="p-2 border rounded font-bold border-blue-200 shadow-sm">
+                                <option value="perdido">Pet Perdido</option>
+                                <option value="zoonoses">🚨 ZOONOSES</option>
+                            </select>
+                        </div>
+
+                        <div id="divOutroBairro" class="hidden">
+                            <input type="text" id="outro_bairro" placeholder="Especifique o local..." class="w-full p-2 border rounded bg-blue-50 text-xs">
+                        </div>
+
+                        <input type="text" id="caracteristicas" placeholder="Ex: Vira-lata caramelo, dócil" class="w-full p-2 border rounded text-xs" required>
+
+                        <div class="bg-yellow-50 p-2 rounded border border-yellow-200">
+                            <label class="block text-[9px] font-bold text-yellow-700 uppercase">WhatsApp de quem encontrou:</label>
+                            <input type="tel" id="whatsapp_contato" placeholder="Ex: 13991753601" class="w-full p-1 border rounded text-xs outline-none" required>
+                        </div>
+
+                        <div class="bg-gray-50 p-2 rounded border border-dashed border-gray-300">
+                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-1">Foto do Animal:</label>
+                            <input type="file" id="input_foto" accept="image/*" class="text-[9px] w-full cursor-pointer">
+                        </div>
+
+                        <button type="button" onclick="obterLocalizacao()" id="btnLoc" class="w-full py-2 bg-gray-100 text-gray-600 rounded text-[10px] font-bold border hover:bg-gray-200 transition-all">📍 Marcar Local Exato (GPS)</button>
+                        <input type="hidden" id="coords" value="">
+
+                        <button type="submit" class="w-full bg-green-600 text-white font-black py-3 rounded-xl shadow-lg uppercase text-xs tracking-widest hover:bg-green-700 transition-all active:scale-95">Publicar Aviso</button>
+                    </form>
                 </div>
+            </section>
 
-                <input type="text" id="caracteristicas" placeholder="Cor, porte, pelagem e temperamento..." class="w-full p-3 border rounded-lg" required>
-
-                <div class="flex gap-2">
-                    <button type="button" onclick="obterLocalizacao()" id="btnLoc" class="flex-1 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs font-bold border">
-                        📍 Marcar Local GPS
-                    </button>
-                    <input type="hidden" id="coords" value="">
-                </div>
-
-                <div class="bg-gray-50 p-3 rounded-lg border border-dashed border-gray-300">
-                    <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Foto do Animal:</label>
-                    <input type="file" id="foto" accept="image/*" class="text-xs">
-                </div>
-
-                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all uppercase tracking-wider">
-                    Publicar no Mapa de Mongaguá
-                </button>
-            </form>
-        </section>
-
-        <h2 class="text-lg font-black mb-4 text-gray-700 border-l-4 border-blue-500 pl-2 uppercase">Registros Recentes</h2>
-        <div id="petFeed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
-
+            <section class="lg:col-span-8">
+                <div id="petFeed" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    </div>
+            </section>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-white p-6 mt-10 text-center border-t-4 border-yellow-400">
-        <p class="text-sm opacity-90">Desenvolvido por <strong>MONGBeach</strong></p>
-        <p class="text-lg font-bold text-yellow-400">(13) 99175-3601</p>
-        <p class="text-[10px] mt-2 opacity-50 uppercase tracking-widest">Mongaguá - SP</p>
+    <footer class="bg-gray-900 text-white p-8 mt-10 text-center border-t-4 border-yellow-400">
+        <p class="text-[10px] opacity-50 uppercase font-bold mb-1 tracking-widest text-white/80">Tecnologia e Cidadania</p>
+        <p class="text-sm font-medium italic">Desenvolvido por <span class="text-blue-400 font-bold">MONGBeach</span></p>
+        <p class="text-xl font-black text-yellow-400 mt-1 tabular-nums leading-none">(13) 99175-3601</p>
+        <p class="text-[9px] mt-4 opacity-40 uppercase tracking-widest font-light">Mongaguá - SP • Projeto Guti 2026</p>
     </footer>
 
     <script>
-        function checkZoonoses(select) {
-            if(select.value === 'zoonoses') {
-                alert("ATENÇÃO: Casos de Zoonoses devem ser reportados com precisão. Certifique-se de marcar a localização GPS.");
+        const SENHA_GESTOR = "123Pin567Pin";
+        let pets = [];
+
+        function acessoGestor() {
+            if(prompt("Digite a senha de Gestor MONGBeach:") === SENHA_GESTOR) {
+                document.body.classList.add('admin-mode');
+                alert("Modo Administrativo Ativado.");
+                renderFeed();
+            } else {
+                alert("Senha inválida.");
             }
         }
 
+        function toggleOutroBairro(select) {
+            document.getElementById('divOutroBairro').classList.toggle('hidden', select.value !== 'Outros');
+        }
+
         function obterLocalizacao() {
+            const btn = document.getElementById('btnLoc');
             navigator.geolocation.getCurrentPosition((pos) => {
                 document.getElementById('coords').value = `${pos.coords.latitude},${pos.coords.longitude}`;
-                document.getElementById('btnLoc').innerText = "✅ GPS OK";
-                document.getElementById('btnLoc').classList.add("bg-green-100", "text-green-700");
+                btn.innerText = "✅ Localização Capturada";
+                btn.className = "w-full py-2 bg-green-100 text-green-700 rounded text-[10px] font-bold border border-green-300";
+            }, () => {
+                btn.innerText = "❌ GPS não autorizado";
             });
         }
 
-        const petForm = document.getElementById('petForm');
-        petForm.addEventListener('submit', function(e) {
+        document.getElementById('petForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const petData = {
-                bairro: document.getElementById('bairro').value,
-                categoria: document.getElementById('categoria').value,
-                caracteristicas: document.getElementById('caracteristicas').value,
-                coords: document.getElementById('coords').value,
-                contato: "(13) 9XXXX-XXXX" 
-            };
-            adicionarCard(petData);
-            this.reset();
+            const fileInput = document.getElementById('input_foto');
+            const reader = new FileReader();
+
+            if (fileInput.files[0]) {
+                reader.readAsDataURL(fileInput.files[0]);
+                reader.onload = () => salvarPet(reader.result);
+            } else {
+                salvarPet(null);
+            }
         });
 
-        function adicionarCard(pet) {
+        function salvarPet(fotoData) {
+            const pet = {
+                id: Date.now(),
+                bairro: document.getElementById('bairro').value === 'Outros' ? document.getElementById('outro_bairro').value : document.getElementById('bairro').value,
+                categoria: document.getElementById('categoria').value,
+                caracteristicas: document.getElementById('caracteristicas').value,
+                whatsapp: document.getElementById('whatsapp_contato').value.replace(/\D/g, ''),
+                coords: document.getElementById('coords').value,
+                foto: fotoData,
+                status: 'ativo'
+            };
+            pets.unshift(pet);
+            renderFeed();
+            document.getElementById('petForm').reset();
+            document.getElementById('divOutroBairro').classList.add('hidden');
+            document.getElementById('btnLoc').innerText = "📍 Marcar Local Exato (GPS)";
+            document.getElementById('btnLoc').className = "w-full py-2 bg-gray-100 text-gray-600 rounded text-[10px] font-bold border";
+        }
+
+        function renderFeed() {
             const feed = document.getElementById('petFeed');
-            const card = document.createElement('div');
-            const isZoonoses = pet.categoria === 'zoonoses';
-            
-            card.className = `bg-white rounded-2xl overflow-hidden shadow-lg border-b-4 ${isZoonoses ? 'border-red-600' : 'border-blue-500'}`;
-            
-            card.innerHTML = `
-                <div class="relative h-44 bg-gray-200 flex flex-col items-center justify-center overflow-hidden">
-                    ${isZoonoses ? `
-                        <div class="absolute inset-0 z-10 bg-black/70 flex flex-col items-center justify-center p-4 text-center text-white backdrop-blur-sm" id="alert-${Date.now()}">
-                            <span class="text-3xl mb-1">⚠️</span>
-                            <p class="text-xs font-bold uppercase">Imagens Sensíveis</p>
-                            <p class="text-[10px] opacity-80 mb-2">Animal ferido em via pública</p>
-                            <button onclick="this.parentElement.remove()" class="bg-white text-red-600 px-3 py-1 rounded-full text-[10px] font-black uppercase">Ver Foto</button>
+            feed.innerHTML = '';
+            const isAdmin = document.body.classList.contains('admin-mode');
+
+            pets.forEach(pet => {
+                const card = document.createElement('div');
+                const isZoonoses = pet.categoria === 'zoonoses';
+                const isEncontrado = pet.status === 'encontrado';
+                
+                card.className = `bg-white rounded-xl shadow-lg border-b-2 overflow-hidden relative flex flex-col animate-fadeIn ${isZoonoses ? 'border-red-600' : 'border-blue-500'} ${isEncontrado ? 'opacity-40' : ''}`;
+                
+                card.innerHTML = `
+                    <div class="h-32 bg-gray-200 relative overflow-hidden flex items-center justify-center">
+                        ${pet.foto ? `<img src="${pet.foto}" class="preview-img">` : '<span class="text-3xl">🐶</span>'}
+                        
+                        ${isZoonoses && !isEncontrado ? `
+                            <div class="absolute inset-0 z-30 zoonoses-blur flex flex-col items-center justify-center text-center p-2">
+                                <span class="text-white text-xl mb-1">⚠️</span>
+                                <p class="text-white font-black text-[8px] uppercase">Conteúdo Sensível</p>
+                                <button onclick="this.parentElement.remove()" class="mt-2 bg-red-600 text-white text-[7px] font-black px-2 py-1 rounded uppercase">Ver Detalhes</button>
+                            </div>
+                        ` : ''}
+
+                        ${isEncontrado ? '<div class="absolute inset-0 flex items-center justify-center z-40"><span class="found-stamp font-black px-2 py-1 uppercase text-[10px]">ENCONTRADO</span></div>' : ''}
+                        
+                        ${isAdmin ? `<button onclick="deletarPet(${pet.id})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 text-[10px] z-50 shadow-md font-bold">X</button>` : ''}
+                    </div>
+
+                    <div class="p-3 flex-grow flex flex-col">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[8px] font-black px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 uppercase border border-blue-100">${pet.bairro}</span>
+                            ${isZoonoses ? '<span class="text-[7px] font-black text-red-600 uppercase">🚨 Zoonoses</span>' : ''}
                         </div>
-                    ` : ''}
-                    <span class="text-4xl">🐶</span>
-                    <p class="text-[10px] text-gray-400 mt-2 italic">Imagem de Referência</p>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[10px] font-black px-2 py-0.5 rounded bg-gray-100 text-gray-600 uppercase">${pet.bairro}</span>
-                        ${isZoonoses ? '<span class="text-[10px] font-black text-red-600 uppercase animate-pulse">● Zoonoses</span>' : ''}
+                        <h3 class="font-bold text-gray-800 text-[10px] mt-1 h-8 overflow-hidden leading-tight">${pet.caracteristicas}</h3>
+                        
+                        ${!isEncontrado ? `
+                            <button onclick="revelar(this)" class="w-full mt-3 py-2 rounded-lg ${isZoonoses ? 'bg-red-600' : 'bg-blue-600'} text-white text-[9px] font-black uppercase shadow-md active:scale-95 transition-transform">
+                                ${isZoonoses ? 'Ajudar Animal' : 'É meu cachorro!'}
+                            </button>
+                            <div class="hidden-contact mt-3 text-center">
+                                <a href="https://wa.me/55${pet.whatsapp}" target="_blank" class="text-green-600 font-black text-[11px] block underline">ABRIR WHATSAPP</a>
+                                ${pet.coords ? `<a href="https://www.google.com/maps?q=${pet.coords}" target="_blank" class="text-blue-500 text-[8px] block mt-1 font-bold italic underline">📍 VER NO MAPA</a>` : ''}
+                                <button onclick="marcarEncontrado(${pet.id})" class="text-[7px] text-gray-400 font-bold uppercase block w-full mt-3 underline hover:text-green-600">Marcar como Encontrado</button>
+                            </div>
+                        ` : '<div class="mt-4 text-center text-green-600 font-black text-[9px] italic uppercase tracking-widest">Final Feliz! 🐾</div>'}
                     </div>
-                    <h3 class="font-bold text-gray-800 leading-tight h-10 overflow-hidden">${pet.caracteristicas}</h3>
-                    
-                    <button onclick="revelar(this)" class="mt-4 w-full ${isZoonoses ? 'bg-red-600' : 'bg-blue-600'} text-white py-3 rounded-xl font-black text-xs uppercase tracking-tighter">
-                        ${isZoonoses ? 'Resgatar / Ajudar' : 'É meu cachorro!'}
-                    </button>
-                    
-                    <div class="hidden-contact mt-3 p-3 bg-gray-50 border rounded-lg text-center">
-                        <p class="text-[10px] font-bold text-gray-500 uppercase">Falar com quem postou:</p>
-                        <p class="text-lg font-black text-gray-800 leading-none mt-1">${pet.contato}</p>
-                        ${pet.coords ? `<a href="https://www.google.com/maps?q=${pet.coords}" target="_blank" class="text-blue-500 text-[10px] font-bold underline mt-2 block italic">VER LOCALIZAÇÃO NO GPS</a>` : ''}
-                    </div>
-                </div>
-            `;
-            feed.prepend(card);
+                `;
+                feed.appendChild(card);
+            });
         }
 
         function revelar(btn) {
-            const div = btn.nextElementSibling;
-            if(confirm("Deseja visualizar as informações de contato para este caso?")) {
-                div.style.display = 'block';
+            if(confirm("Confirmas que desejas ver o contato e ajudar este animal?")) {
+                btn.nextElementSibling.style.display = 'block';
                 btn.style.display = 'none';
             }
         }
 
-        // Card de Exemplo Zoonoses
-        adicionarCard({
-            bairro: "Vera Cruz",
-            categoria: "zoonoses",
-            caracteristicas: "Cachorro atropelado na Av. Governador Mario Covas, precisa de ajuda urgente.",
-            coords: "-24.1234,-46.6789",
-            contato: "(13) 99175-3601"
-        });
+        function marcarEncontrado(id) {
+            const pet = pets.find(p => p.id === id);
+            if(pet) { pet.status = 'encontrado'; renderFeed(); }
+        }
+
+        function deletarPet(id) {
+            if(confirm("Desejas eliminar este registro permanentemente?")) { 
+                pets = pets.filter(p => p.id !== id); 
+                renderFeed(); 
+            }
+        }
     </script>
 </body>
 </html>
