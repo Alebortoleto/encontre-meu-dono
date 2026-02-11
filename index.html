@@ -10,9 +10,33 @@
         .found-stamp { transform: rotate(-15deg); border: 3px solid #16a34a; color: #16a34a; background: rgba(255,255,255,0.9); z-index: 40; }
         .preview-img { width: 100%; height: 100%; object-fit: cover; }
         .zoonoses-blur { backdrop-filter: blur(25px); background: rgba(0,0,0,0.95); border: 2px solid #ef4444; }
-        .tab-btn { transition: all 0.3s; border-bottom: 4px solid transparent; }
-        .tab-active { border-bottom: 4px solid #facc15; background: rgba(255,255,255,0.1); color: #facc15; }
-        .btn-denuncia-active { border-bottom: 4px solid #ef4444 !important; color: #ef4444 !important; background: rgba(239, 68, 68, 0.1); }
+        
+        /* Estilo base dos botões: Fundo Azul, Letra Branca */
+        .tab-btn { 
+            transition: all 0.3s; 
+            background-color: #2563eb; 
+            color: white; 
+            border-right: 1px solid #1d4ed8;
+            font-weight: 800;
+        }
+
+        /* Denúncia: Letras Amarelas em repouso */
+        #tab-denuncia { color: #facc15; }
+
+        /* Botões Ativos: Fundo Branco, Letra Azul */
+        .tab-active { 
+            background-color: white !important; 
+            color: #2563eb !important; 
+            border-bottom: 4px solid #2563eb;
+        }
+
+        /* Denúncia Ativo: Fundo Preto, Letra Vermelha */
+        .btn-denuncia-active { 
+            background-color: black !important; 
+            color: #ef4444 !important; 
+            border-bottom: 4px solid #ef4444 !important;
+        }
+
         .admin-only { display: none; }
         .admin-mode .admin-only { display: block !important; }
         .gestor-on { color: #facc15 !important; opacity: 1 !important; font-weight: bold; }
@@ -21,32 +45,32 @@
 <body class="bg-gray-100 font-sans flex flex-col min-h-screen text-gray-900 transition-all">
 
     <header class="bg-white text-gray-900 shadow-xl sticky top-0 z-50">
-    <div class="p-4 text-center relative border-b border-gray-100 flex flex-col items-center">
-        <a href="https://alebortoleto.github.io/MONGBeach/" target="_blank" class="absolute top-2 left-2 bg-blue-600 text-white px-3 py-1.5 rounded-lg text-[10px] font-black uppercase hover:bg-blue-700 transition-colors shadow-sm">
-            🌐 Guia
-        </a>
+        <div class="p-4 text-center relative border-b border-gray-100 flex flex-col items-center">
+            <a href="https://alebortoleto.github.io/MONGBeach/" target="_blank" class="absolute top-2 left-2 bg-blue-600 text-white px-3 py-1.5 rounded-lg text-[10px] font-black uppercase shadow-sm">
+                🌐 Guia
+            </a>
 
-        <img src="logo.png" alt="Logo Mongbeach" class="h-20 mb-2 transition-all">
+            <img src="logo.png" alt="Logo Mongbeach" class="h-20 mb-2">
 
-        <h1 class="text-xl font-black uppercase italic leading-none tracking-tighter text-blue-600">Encontre meu dono</h1>
-        <p class="text-[10px] font-bold tracking-widest mt-1 opacity-60 uppercase text-gray-500">Plataforma Mongbeach</p>
+            <h1 class="text-xl font-black uppercase italic leading-none tracking-tighter text-blue-600">Encontre meu dono</h1>
+            <p class="text-[10px] font-bold tracking-widest mt-1 opacity-60 uppercase text-gray-500">Plataforma Mongbeach</p>
+            
+            <button onclick="toggleGestor()" id="btnGestor" class="absolute top-2 right-2 opacity-40 text-lg">🔒</button>
+        </div>
         
-        <button onclick="toggleGestor()" id="btnGestor" class="absolute top-2 right-2 opacity-40 hover:opacity-100 text-lg">🔒</button>
-    </div>
-    
-    <nav class="flex w-full bg-gray-50 overflow-x-auto border-b border-gray-200">
-        <button onclick="mudarGuia('encontrados')" id="tab-encontrados" class="tab-btn flex-1 py-4 text-[9px] font-black uppercase tracking-tighter border-r border-gray-200 tab-active min-w-[80px] text-gray-600">Encontrados</button>
-        <button onclick="mudarGuia('perdidos')" id="tab-perdidos" class="tab-btn flex-1 py-4 text-[9px] font-black uppercase tracking-tighter border-r border-gray-200 min-w-[80px] text-gray-600">Perdidos</button>
-        <button onclick="mudarGuia('adocao')" id="tab-adocao" class="tab-btn flex-1 py-4 text-[9px] font-black uppercase tracking-tighter border-r border-gray-200 min-w-[80px] text-blue-600">🐾 Me Adote</button>
-        <button onclick="mudarGuia('denuncia')" id="tab-denuncia" class="tab-btn flex-1 py-4 text-[9px] font-black uppercase tracking-tighter text-red-600 min-w-[80px]">🚨 Denúncia</button>
-    </nav>
-</header>
+        <nav class="flex w-full overflow-x-auto shadow-inner">
+            <button onclick="mudarGuia('encontrados')" id="tab-encontrados" class="tab-btn flex-1 py-4 text-[9px] uppercase tracking-tighter tab-active min-w-[80px]">Encontrados</button>
+            <button onclick="mudarGuia('perdidos')" id="tab-perdidos" class="tab-btn flex-1 py-4 text-[9px] uppercase tracking-tighter min-w-[80px]">Perdidos</button>
+            <button onclick="mudarGuia('adocao')" id="tab-adocao" class="tab-btn flex-1 py-4 text-[9px] uppercase tracking-tighter min-w-[80px]">🐾 Me Adote</button>
+            <button onclick="mudarGuia('denuncia')" id="tab-denuncia" class="tab-btn flex-1 py-4 text-[9px] uppercase tracking-tighter min-w-[80px]">🚨 Denúncia</button>
+        </nav>
+    </header>
 
     <main class="container mx-auto p-4 flex-grow max-w-6xl">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             <section class="lg:col-span-4">
-                <div id="form-container" class="bg-white p-5 rounded-2xl shadow-lg border-t-4 border-blue-500 sticky top-40 max-h-[75vh] overflow-y-auto">
+                <div id="form-container" class="bg-white p-5 rounded-2xl shadow-lg border-t-4 border-blue-500 sticky top-48 max-h-[70vh] overflow-y-auto">
                     <h2 id="form-title" class="text-lg font-black mb-4 text-gray-800 uppercase italic">📸 Cadastrar Animal</h2>
                     
                     <form id="mainForm" class="space-y-4">
@@ -98,9 +122,6 @@
                         <div class="bg-gray-50 p-3 rounded-xl border border-dashed border-gray-300">
                             <label class="block text-[9px] font-black text-gray-500 uppercase mb-1">Fotos (Até 3):</label>
                             <input type="file" id="input_foto" accept="image/*" multiple class="text-[10px] w-full">
-                            <p id="msg-video" class="hidden text-[8px] text-red-500 mt-2 font-bold leading-tight italic">
-                                * Apenas FOTO. Vídeos serão solicitados via WhatsApp por segurança.
-                            </p>
                         </div>
 
                         <button type="button" onclick="obterLocalizacao()" id="btnLoc" class="w-full py-3 bg-gray-100 text-gray-700 rounded-lg text-[10px] font-black border hover:bg-gray-200">📍 MARCAR GPS</button>
@@ -147,23 +168,22 @@
         function mudarGuia(guia) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active', 'btn-denuncia-active'));
             const tab = document.getElementById(`tab-${guia}`);
-            tab.classList.add('tab-active');
+            
+            if(guia === 'denuncia') {
+                tab.classList.add('btn-denuncia-active');
+            } else {
+                tab.classList.add('tab-active');
+            }
             
             document.getElementById('current_tab').value = guia;
             const camposAdocao = document.getElementById('campos-adocao');
-            const msgVideo = document.getElementById('msg-video');
-            const btnSubmit = document.getElementById('btnSubmit');
             camposAdocao.classList.toggle('hidden', guia !== 'adocao');
-            msgVideo.classList.toggle('hidden', guia !== 'denuncia');
 
-            if(guia === 'adocao') {
-                btnSubmit.className = "w-full bg-yellow-500 text-black font-black py-4 rounded-xl shadow-xl uppercase text-xs";
-            } else if(guia === 'denuncia') {
-                tab.classList.add('btn-denuncia-active');
-                btnSubmit.className = "w-full bg-red-600 text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs";
-            } else {
-                btnSubmit.className = `w-full ${guia === 'perdidos' ? 'bg-green-600' : 'bg-blue-600'} text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs`;
-            }
+            const btnSubmit = document.getElementById('btnSubmit');
+            if(guia === 'adocao') btnSubmit.className = "w-full bg-yellow-500 text-black font-black py-4 rounded-xl shadow-xl uppercase text-xs";
+            else if(guia === 'denuncia') btnSubmit.className = "w-full bg-red-600 text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs";
+            else btnSubmit.className = `w-full ${guia === 'perdidos' ? 'bg-green-600' : 'bg-blue-600'} text-white font-black py-4 rounded-xl shadow-xl uppercase text-xs`;
+            
             renderFeed();
         }
 
@@ -171,12 +191,10 @@
             const isAdmin = document.body.classList.contains('admin-mode');
             if(isAdmin) {
                 document.body.classList.remove('admin-mode');
-                document.getElementById('btnGestor').innerText = "🔒";
                 document.getElementById('admin-warning').classList.add('hidden');
             } else {
                 if(prompt("Senha de Gestor:") === SENHA_GESTOR) {
                     document.body.classList.add('admin-mode');
-                    document.getElementById('btnGestor').innerText = "🔓 SAIR";
                     document.getElementById('admin-warning').classList.remove('hidden');
                 }
             }
@@ -196,7 +214,7 @@
             let fotosCarregadas = [];
             
             if(files.length > 0) {
-                Array.from(files).slice(0, 3).forEach((file, index) => {
+                Array.from(files).slice(0, 3).forEach((file) => {
                     const reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.onload = () => {
@@ -223,10 +241,7 @@
                 adocao: {
                     idade: document.getElementById('adocao_idade').value,
                     porte: document.getElementById('adocao_porte').value,
-                    criancas: document.getElementById('adocao_crianca').checked,
-                    animais: document.getElementById('adocao_animais').checked,
-                    ong: document.getElementById('adocao_ong').value,
-                    endereco: document.getElementById('adocao_endereco').value
+                    ong: document.getElementById('adocao_ong').value
                 }
             };
             pets.unshift(novoItem);
@@ -265,23 +280,13 @@
                         </div>
                         <p class="font-bold text-gray-800 text-[10px] mt-1 h-8 overflow-hidden italic leading-none">"${item.descricao}"</p>
                         
-                        ${item.guia === 'adocao' ? `
-                            <div class="mt-2 text-[8px] bg-blue-50 p-2 rounded border border-blue-100 space-y-1">
-                                <p><strong>Idade:</strong> ${item.adocao.idade || 'N/A'} | <strong>Porte:</strong> ${item.adocao.porte || 'N/A'}</p>
-                                <p><strong>Convívio:</strong> ${item.adocao.criancas ? '✅ Crianças' : '❌ Crianças'} | ${item.adocao.animais ? '✅ Pets' : '❌ Pets'}</p>
-                                <p class="truncate"><strong>Local:</strong> ${item.adocao.endereco || item.adocao.ong}</p>
-                            </div>
-                        ` : ''}
-
                         ${!isAdmin && item.guia !== 'denuncia' ? `
                             <button onclick="revelarContatoAdocao(this, '${item.guia}')" class="w-full mt-3 py-2 rounded-lg bg-gray-900 text-white text-[9px] font-black uppercase shadow-md">${item.guia === 'adocao' ? 'Quero Adotar' : 'Ver Contato'}</button>
                             <div class="hidden-contact mt-3 text-center">
-                                ${item.guia === 'adocao' ? '<p class="text-[7px] text-red-500 font-bold mb-2 leading-none uppercase tracking-tighter">* Ao clicar, declaro aceitar os termos da LGPD e autorizo o contato da Mongbeach/ONG.</p>' : ''}
                                 <a href="https://wa.me/55${item.whatsapp}" target="_blank" class="text-green-600 font-black text-[10px] block underline uppercase tracking-tighter">Chamar no WhatsApp</a>
                                 <button onclick="marcarResolvido(${item.id})" class="text-[7px] text-gray-400 block w-full mt-2 underline uppercase">Finalizar Registro</button>
                             </div>
                         ` : ''}
-                        
                         ${isAdmin && item.guia === 'denuncia' ? `<div class="mt-2 p-2 bg-red-50 border border-red-200 rounded italic text-[8px]"><a href="https://wa.me/55${item.whatsapp}" target="_blank" class="text-red-600 font-bold underline">📲 CONTATAR DENUNCIANTE</a></div>` : ''}
                     </div>
                 `;
@@ -291,22 +296,22 @@
 
         function revelarContatoAdocao(btn, guia) {
             if(guia === 'adocao') {
-                if(!confirm("TERMO DE ADOÇÃO: Para prosseguir, você concorda em compartilhar seu número de WhatsApp com a organização para fins de entrevista de adoção (Lei Geral de Proteção de Dados - LGPD)?")) return;
+                if(!confirm("TERMO DE ADOÇÃO: Para prosseguir, você concorda em compartilhar seu número de WhatsApp com a organização (LGPD)?")) return;
             }
             btn.nextElementSibling.style.display = 'block';
             btn.style.display = 'none';
         }
 
-        function marcarResolvido(id) {
+        function marcarResolvido(id) { 
             const p = pets.find(x => x.id === id);
             if(p) { p.status = 'encontrado'; localStorage.setItem('pets_mongagua_v2', JSON.stringify(pets)); renderFeed(); }
         }
 
-        function deletarItem(id) {
-            if(confirm("Apagar permanentemente?")) {
+        function deletarItem(id) { 
+            if(confirm("Apagar permanentemente?")) { 
                 pets = pets.filter(x => x.id !== id);
-                localStorage.setItem('pets_mongagua_v2', JSON.stringify(pets));
-                renderFeed();
+                localStorage.setItem('pets_mongagua_v2', JSON.stringify(pets)); 
+                renderFeed(); 
             } 
         }
 
@@ -314,5 +319,3 @@
     </script>
 </body>
 </html>
-
-
