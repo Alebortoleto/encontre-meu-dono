@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encontre meu dono - Por Guti</title>
+    <title>Encontre meu dono - Mongbeach</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .hidden-contact { display: none; }
         .found-stamp { transform: rotate(-15deg); border: 3px solid #16a34a; color: #16a34a; background: rgba(255,255,255,0.9); z-index: 40; }
-        .adopted-stamp { transform: rotate(-15deg); border: 3px solid #facc15; color: #ca8a04; background: rgba(255,255,255,0.9); z-index: 40; }
         .preview-img { width: 100%; height: 100%; object-fit: cover; }
         .zoonoses-blur { backdrop-filter: blur(25px); background: rgba(0,0,0,0.95); border: 2px solid #ef4444; }
         .tab-btn { transition: all 0.3s; border-bottom: 4px solid transparent; }
@@ -16,14 +15,20 @@
         .btn-denuncia-active { border-bottom: 4px solid #ef4444 !important; color: #ef4444 !important; background: rgba(239, 68, 68, 0.1); }
         .admin-only { display: none; }
         .admin-mode .admin-only { display: block !important; }
+        .gestor-on { color: #facc15 !important; opacity: 1 !important; font-weight: bold; }
     </style>
 </head>
 <body class="bg-gray-100 font-sans flex flex-col min-h-screen text-gray-900 transition-all">
 
     <header class="bg-blue-600 text-white shadow-2xl sticky top-0 z-50">
         <div class="p-4 text-center relative border-b border-blue-500">
+            <a href="https://alebortoleto.github.io/MONGBeach/" target="_blank" class="absolute top-2 left-2 bg-yellow-400 text-blue-900 px-2 py-1 rounded text-[9px] font-black uppercase hover:bg-yellow-300 transition-colors">
+                🌐 Guia Mongbeach
+            </a>
+
             <h1 class="text-xl font-black uppercase italic leading-none tracking-tighter">Encontre meu dono</h1>
-            <p class="text-[10px] font-light tracking-widest mt-1 opacity-80 uppercase font-bold text-blue-200">"Por Guti"</p>
+            <p class="text-[10px] font-light tracking-widest mt-1 opacity-80 uppercase font-bold text-blue-200">Desenvolvido por Mongbeach</p>
+            
             <button onclick="toggleGestor()" id="btnGestor" class="absolute top-2 right-2 opacity-20 hover:opacity-100 text-[10px]">🔒</button>
         </div>
         
@@ -106,7 +111,7 @@
 
             <section class="lg:col-span-8">
                 <div id="admin-warning" class="hidden admin-only bg-red-600 p-3 rounded-lg mb-4 text-[10px] font-black text-white uppercase text-center shadow-lg">
-                    🔒 GESTÃO MONGBeach ATIVA
+                    🔒 GESTÃO MONGBEACH ATIVA
                 </div>
                 <div id="petFeed" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
             </section>
@@ -114,13 +119,35 @@
     </main>
 
     <footer class="bg-gray-900 text-white p-8 mt-10 text-center border-t-4 border-yellow-400">
-        <p class="text-[10px] opacity-60 uppercase font-black mb-1">MONGBeach Tecnologia • Projeto Guti 2026</p>
-        <p class="text-xl font-black text-yellow-400 mt-2 tabular-nums">(13) 99175-3601</p>
+        <div class="flex flex-col items-center gap-4">
+            <div class="flex flex-col items-center gap-2">
+                <img src="logo_mongbeach.png" alt="Logo Mongbeach" class="h-16 mb-2">
+                <p class="text-[10px] font-black uppercase tracking-widest text-yellow-400 leading-none">Desenvolvido por:</p>
+                <p class="text-2xl font-black tracking-tighter leading-none">MONGBEACH</p>
+            </div>
+
+            <div class="w-full max-w-xs border-y border-white/10 py-4 my-2">
+                <a href="https://alebortoleto.github.io/MONGBeach/" target="_blank" class="block w-full bg-yellow-400 text-blue-900 py-3 rounded-xl font-black text-xs uppercase hover:bg-yellow-300 transition-all">
+                    🌐 Acessar Guia Mongbeach
+                </a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 mt-2">
+                <a href="https://instagram.com/mongbeach" target="_blank" class="text-[9px] font-black px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 transition-all uppercase">Instagram</a>
+                <a href="https://facebook.com/mongbeach" target="_blank" class="text-[9px] font-black px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 transition-all uppercase">Facebook</a>
+                <a href="https://wa.me/5513991753601" target="_blank" class="text-[9px] font-black px-4 py-2 bg-green-600 rounded-full hover:bg-green-700 transition-all flex items-center gap-2">
+                    <span>WHATSAPP:</span>
+                    <span class="tabular-nums">(13) 99175-3601</span>
+                </a>
+            </div>
+
+            <p class="text-[8px] opacity-40 uppercase font-black mt-6 tracking-[0.3em]">Mongbeach Tecnologia © 2026 • Mongaguá/SP</p>
+        </div>
     </footer>
 
     <script>
         const SENHA_GESTOR = "123Pin567Pin";
-        let pets = JSON.parse(localStorage.getItem('pets_mongagua_v3')) || [];
+        let pets = JSON.parse(localStorage.getItem('pets_mongagua_v2')) || [];
 
         function mudarGuia(guia) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active', 'btn-denuncia-active'));
@@ -131,7 +158,6 @@
             const camposAdocao = document.getElementById('campos-adocao');
             const msgVideo = document.getElementById('msg-video');
             const btnSubmit = document.getElementById('btnSubmit');
-
             camposAdocao.classList.toggle('hidden', guia !== 'adocao');
             msgVideo.classList.toggle('hidden', guia !== 'denuncia');
 
@@ -209,10 +235,10 @@
                 }
             };
             pets.unshift(novoItem);
-            localStorage.setItem('pets_mongagua_v3', JSON.stringify(pets));
+            localStorage.setItem('pets_mongagua_v2', JSON.stringify(pets));
             renderFeed();
             document.getElementById('mainForm').reset();
-            alert("Publicado com sucesso!");
+            alert("Cadastrado com sucesso!");
         }
 
         function renderFeed() {
@@ -220,31 +246,21 @@
             const currentTab = document.getElementById('current_tab').value;
             const isAdmin = document.body.classList.contains('admin-mode');
             feed.innerHTML = '';
-
+            
             pets.forEach(item => {
                 if(item.guia === 'denuncia' && !isAdmin) return;
                 if(!isAdmin && item.guia !== currentTab) return;
 
                 const card = document.createElement('div');
                 const isZoonoses = item.categoria === 'zoonoses';
-                const isFinalizado = item.status === 'resolvido';
+                const isResolvido = item.status === 'encontrado';
                 
-                card.className = `bg-white rounded-2xl shadow-lg border-b-4 overflow-hidden relative flex flex-col ${item.guia === 'denuncia' ? 'border-red-600' : (item.guia === 'adocao' ? 'border-yellow-400' : (item.guia === 'perdidos' ? 'border-green-500' : 'border-blue-500'))} ${isFinalizado ? 'opacity-40' : ''}`;
+                card.className = `bg-white rounded-2xl shadow-lg border-b-4 overflow-hidden relative flex flex-col ${item.guia === 'denuncia' ? 'border-red-600' : (item.guia === 'adocao' ? 'border-yellow-400' : (item.guia === 'perdidos' ? 'border-green-500' : 'border-blue-500'))} ${isResolvido ? 'opacity-40' : ''}`;
                 
                 card.innerHTML = `
                     <div class="h-32 bg-gray-200 relative overflow-hidden flex items-center justify-center">
-                        ${item.fotos && item.fotos.length > 0 ? `<img src="${item.fotos[0]}" class="preview-img">` : '<span class="text-2xl font-black opacity-10 italic uppercase">MONGBeach</span>'}
-                        
-                        ${isZoonoses && !isFinalizado ? `<div class="absolute inset-0 z-30 zoonoses-blur flex flex-col items-center justify-center p-2 text-center text-white"><p class="text-[8px] font-black uppercase mb-1">⚠️ SENSÍVEL</p><button onclick="this.parentElement.remove()" class="bg-red-600 text-[7px] px-2 py-1 rounded-full uppercase">Exibir</button></div>` : ''}
-                        
-                        ${isFinalizado ? `
-                            <div class="absolute inset-0 flex items-center justify-center z-40">
-                                <span class="${item.guia === 'adocao' ? 'adopted-stamp' : 'found-stamp'} font-black px-2 py-1 uppercase text-[10px]">
-                                    ${item.guia === 'adocao' ? 'ADOTADO!' : 'RESOLVIDO'}
-                                </span>
-                            </div>
-                        ` : ''}
-
+                        ${item.fotos && item.fotos.length > 0 ? `<img src="${item.fotos[0]}" class="preview-img">` : '<span class="text-2xl font-black opacity-10 italic">MONGBEACH</span>'}
+                        ${isZoonoses && !isResolvido ? `<div class="absolute inset-0 z-30 zoonoses-blur flex flex-col items-center justify-center p-2 text-center text-white"><p class="text-[8px] font-black uppercase mb-1">⚠️ SENSÍVEL</p><button onclick="this.parentElement.remove()" class="bg-red-600 text-[7px] px-2 py-1 rounded-full uppercase">Exibir</button></div>` : ''}
                         ${isAdmin ? `<button onclick="deletarItem(${item.id})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 text-[10px] z-50">X</button>` : ''}
                     </div>
                     <div class="p-3 flex-grow flex flex-col">
@@ -258,18 +274,18 @@
                             <div class="mt-2 text-[8px] bg-blue-50 p-2 rounded border border-blue-100 space-y-1">
                                 <p><strong>Idade:</strong> ${item.adocao.idade || 'N/A'} | <strong>Porte:</strong> ${item.adocao.porte || 'N/A'}</p>
                                 <p><strong>Convívio:</strong> ${item.adocao.criancas ? '✅ Crianças' : '❌ Crianças'} | ${item.adocao.animais ? '✅ Pets' : '❌ Pets'}</p>
-                                <p class="truncate font-bold text-blue-800">${item.adocao.ong || 'Protetor'}</p>
+                                <p class="truncate"><strong>Local:</strong> ${item.adocao.endereco || item.adocao.ong}</p>
                             </div>
                         ` : ''}
 
-                        ${!isAdmin && !isFinalizado && item.guia !== 'denuncia' ? `
-                            <button onclick="revelarContato(this, '${item.guia}')" class="w-full mt-3 py-2 rounded-lg bg-gray-900 text-white text-[9px] font-black uppercase shadow-md">${item.guia === 'adocao' ? 'Quero Adotar' : 'Ver Contato'}</button>
+                        ${!isAdmin && item.guia !== 'denuncia' ? `
+                            <button onclick="revelarContatoAdocao(this, '${item.guia}')" class="w-full mt-3 py-2 rounded-lg bg-gray-900 text-white text-[9px] font-black uppercase shadow-md">${item.guia === 'adocao' ? 'Quero Adotar' : 'Ver Contato'}</button>
                             <div class="hidden-contact mt-3 text-center">
-                                ${item.guia === 'adocao' ? '<p class="text-[6px] text-gray-400 font-bold mb-2 uppercase leading-none">* Autorizo o contato da ONG via LGPD.</p>' : ''}
-                                <a href="https://wa.me/55${item.whatsapp}" target="_blank" class="text-green-600 font-black text-[10px] block underline uppercase tracking-tighter">WhatsApp</a>
+                                ${item.guia === 'adocao' ? '<p class="text-[7px] text-red-500 font-bold mb-2 leading-none uppercase tracking-tighter">* Ao clicar, declaro aceitar os termos da LGPD e autorizo o contato da Mongbeach/ONG.</p>' : ''}
+                                <a href="https://wa.me/55${item.whatsapp}" target="_blank" class="text-green-600 font-black text-[10px] block underline uppercase tracking-tighter">Chamar no WhatsApp</a>
                                 <button onclick="marcarResolvido(${item.id})" class="text-[7px] text-gray-400 block w-full mt-2 underline uppercase">Finalizar Registro</button>
                             </div>
-                        ` : (isFinalizado ? `<div class="mt-4 text-center text-green-600 font-black text-[9px] italic uppercase tracking-widest">${item.guia === 'adocao' ? 'Final Feliz! 🏠' : 'Em Casa! 🐾'}</div>` : '')}
+                        ` : ''}
                         
                         ${isAdmin && item.guia === 'denuncia' ? `<div class="mt-2 p-2 bg-red-50 border border-red-200 rounded italic text-[8px]"><a href="https://wa.me/55${item.whatsapp}" target="_blank" class="text-red-600 font-bold underline">📲 CONTATAR DENUNCIANTE</a></div>` : ''}
                     </div>
@@ -278,23 +294,23 @@
             });
         }
 
-        function revelarContato(btn, guia) {
+        function revelarContatoAdocao(btn, guia) {
             if(guia === 'adocao') {
-                if(!confirm("Concorda em compartilhar seu número com a ONG (LGPD) para entrevista?")) return;
+                if(!confirm("TERMO DE ADOÇÃO: Para prosseguir, você concorda em compartilhar seu número de WhatsApp com a organização para fins de entrevista de adoção (Lei Geral de Proteção de Dados - LGPD)?")) return;
             }
             btn.nextElementSibling.style.display = 'block';
             btn.style.display = 'none';
         }
 
         function marcarResolvido(id) { 
-            const p = pets.find(x => x.id === id); 
-            if(p) { p.status = 'resolvido'; localStorage.setItem('pets_mongagua_v3', JSON.stringify(pets)); renderFeed(); }
+            const p = pets.find(x => x.id === id);
+            if(p) { p.status = 'encontrado'; localStorage.setItem('pets_mongagua_v2', JSON.stringify(pets)); renderFeed(); }
         }
 
         function deletarItem(id) { 
             if(confirm("Apagar permanentemente?")) { 
-                pets = pets.filter(x => x.id !== id); 
-                localStorage.setItem('pets_mongagua_v3', JSON.stringify(pets)); 
+                pets = pets.filter(x => x.id !== id);
+                localStorage.setItem('pets_mongagua_v2', JSON.stringify(pets)); 
                 renderFeed(); 
             } 
         }
